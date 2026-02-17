@@ -9,6 +9,7 @@ import AddChatModal from "@/components/AddChatModal";
 import { getUsers } from "@/api/userApi";
 import { getChatMessages } from "@/api/chatApi";
 import { useNavigate } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 
 interface Message {
     senderId: number;
@@ -84,7 +85,8 @@ export default function Home() {
     }, []);
     
     const handleSendMessage = () => {
-        console.log(room);
+        
+        if (!message.trim() || !room || !selectedUser) return;
         if (!socketRef.current) return;
         socketRef.current.emit("private_message", {
             'roomId': room?.roomId,
@@ -124,8 +126,8 @@ export default function Home() {
 
                 <h1 className="text-4xl max-md:text-2xl  font-bold text-white my-5">Welcome to the Chatapp !</h1>
                 <Card className="overflow-hidden p-0 w-6xl h-5/6 max-md:w-full ">
-                    <CardContent className="grid  p-0 md:grid-cols-2 h-[85vh]">
-                        <div className="p-4 border-r border-slate-700 ">
+                    <CardContent className=" h-[85vh]">
+                        <div className="p-4 ">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-xl font-semibold">Users</h2>
                                 <div className="flex gap-2">
@@ -139,17 +141,15 @@ export default function Home() {
                                 </Button>
                                     </div>
                             </div>
-                            <UserList
-                                users={users}
-                                selectedUserId={selectedUser?.id}
-                                onUserSelect={onUserSelect}
-                            />
-                        </div>
-                        <div className="p-4 relative overflow-auto">
+                          
+                       { room ? (<div className=" relative overflow-auto">
                             <h2 className="text-xl font-semibold mb-4">
+                                <Button className="mr-5"  size="lg" onClick={() => setRoom(null)}>
+                                <ArrowLeft height={40} width={40} className="" />
+                                </Button>
                                 Chat Room {selectedUser ? `- ${selectedUser.username}` : ""}
                             </h2>
-                            <ul>
+                            <ul className="overflow-auto h-[60vh] px-2 mb-20">
                                 {messages.map((msg, index) => {
                                     if (msg.senderId === selectedUser?.id) {
                                         return (
@@ -174,12 +174,15 @@ export default function Home() {
                                 <Input value={message} onChange={(e) => setMessage(e.target.value)} className="" placeholder="Type your message..." />
                                 <Button className="mt-4" onClick={handleSendMessage}>Send Message</Button>
                             </div>
+                        </div>):(  <UserList
+                                users={users}
+                                selectedUserId={selectedUser?.id}
+                                onUserSelect={onUserSelect}
+                            />) }
                         </div>
                     </CardContent>
                 </Card>
-                <div>
-
-                </div>
+                
 
                 <AddChatModal
                     isOpen={isAddChatModalOpen}
