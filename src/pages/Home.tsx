@@ -34,7 +34,7 @@ export default function Home() {
     const socketRef = useRef<Socket | null>(null);
     const token = getToken();
     useEffect(() => {
-        const socket = io("http://localhost:3001",
+        const socket = io(import.meta.env.VITE_API_BASE_URL || "http://localhost:4000",
 
             {
                 auth: {
