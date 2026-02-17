@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as OtpRouteImport } from './routes/otp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as Index_0RouteImport } from './routes/index_0'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OtpRoute = OtpRouteImport.update({
+  id: '/otp',
+  path: '/otp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/index_0': typeof Index_0Route
   '/login': typeof LoginRoute
+  '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/index_0': typeof Index_0Route
   '/login': typeof LoginRoute
+  '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/index_0': typeof Index_0Route
   '/login': typeof LoginRoute
+  '/otp': typeof OtpRoute
   '/signup': typeof SignupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/index_0' | '/login' | '/signup'
+  fullPaths: '/' | '/index_0' | '/login' | '/otp' | '/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/index_0' | '/login' | '/signup'
-  id: '__root__' | '/' | '/index_0' | '/login' | '/signup'
+  to: '/' | '/index_0' | '/login' | '/otp' | '/signup'
+  id: '__root__' | '/' | '/index_0' | '/login' | '/otp' | '/signup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   Index_0Route: typeof Index_0Route
   LoginRoute: typeof LoginRoute
+  OtpRoute: typeof OtpRoute
   SignupRoute: typeof SignupRoute
 }
 
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/otp': {
+      id: '/otp'
+      path: '/otp'
+      fullPath: '/otp'
+      preLoaderRoute: typeof OtpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -106,6 +123,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   Index_0Route: Index_0Route,
   LoginRoute: LoginRoute,
+  OtpRoute: OtpRoute,
   SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport

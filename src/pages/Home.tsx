@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { getToken } from "@/utils/token";
+import { getToken, removeToken } from "@/utils/token";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client"
 import UserList, { type User } from "@/components/UserList";
 import AddChatModal from "@/components/AddChatModal";
 import { getUsers } from "@/api/userApi";
 import { getChatMessages } from "@/api/chatApi";
+import { useNavigate } from "@tanstack/react-router";
 
 interface Message {
     senderId: number;
@@ -21,6 +22,7 @@ interface Room {
 }
 
 export default function Home() {
+    const navigate = useNavigate({from: "/"});
     const [message, setMessage] = useState("");
     const [room, setRoom] = useState<Room | null>(null);
     const [messages, setMessages] = useState<Array<Message>>([]);
@@ -108,16 +110,26 @@ export default function Home() {
         });
         
     }
+    const handleLogout = () => {
+        // Clear token and redirect to login page
+        removeToken();
+        navigate({
+            to: "/login"
+        });
+    }
     return (
         <div className=" flex items-center justify-center bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-            <div className="min-h-screen">
+            <div className="min-h-screen max-md:w-full max-md:p-2
+            ">
 
-                <h1 className="text-4xl font-bold text-white my-5">Welcome to the Chatapp !</h1>
-                <Card className="overflow-hidden p-0 w-6xl h-5/6 ">
-                    <CardContent className="grid p-0 md:grid-cols-2 h-[85vh]">
-                        <div className="p-4 border-r border-slate-700">
+                <h1 className="text-4xl max-md:text-2xl  font-bold text-white my-5">Welcome to the Chatapp !</h1>
+                <Card className="overflow-hidden p-0 w-6xl h-5/6 max-md:w-full ">
+                    <CardContent className="grid  p-0 md:grid-cols-2 h-[85vh]">
+                        <div className="p-4 border-r border-slate-700 ">
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-xl font-semibold">Users</h2>
+                                <div className="flex gap-2">
+        <Button onClick={handleLogout} size="sm">  Logout  </Button>
                                 <Button
                                     size="sm"
                                     onClick={() => setIsAddChatModalOpen(true)}
@@ -125,6 +137,7 @@ export default function Home() {
                                 >
                                     + Add Chat
                                 </Button>
+                                    </div>
                             </div>
                             <UserList
                                 users={users}
@@ -132,7 +145,7 @@ export default function Home() {
                                 onUserSelect={onUserSelect}
                             />
                         </div>
-                        <div className="p-4 relative">
+                        <div className="p-4 relative overflow-auto">
                             <h2 className="text-xl font-semibold mb-4">
                                 Chat Room {selectedUser ? `- ${selectedUser.username}` : ""}
                             </h2>
